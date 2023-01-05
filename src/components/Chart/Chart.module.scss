@@ -1,0 +1,11 @@
+.chartSection {
+  padding: 30px 0;
+  @media (min-width: 800px) {
+    padding: 40px 0;
+  }
+}
+
+.chart {
+  background-color: #fff;
+  border-radius: 10px;
+}

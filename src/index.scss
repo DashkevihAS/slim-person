@@ -1,0 +1,88 @@
+@import '~normalize.css';
+
+$back: #1e252b;
+$textGray: rgba(255, 255, 255, 0.55);
+$textWhite: rgba(255, 255, 255, 0.9);
+$bodyColor: #fa8f61;
+
+@font-face {
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 400;
+  src: url(./fonts/Comfortaa-Regular.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Comfortaa';
+  font-weight: 700;
+  font-style: normal;
+  src: url(./fonts/Comfortaa-Bold.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Comfortaa';
+  font-weight: 300;
+  font-style: normal;
+  src: url(./fonts//Comfortaa-Light.woff2) format('woff2');
+}
+
+html {
+  box-sizing: border-box;
+}
+*,
+*:after,
+*:before {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  background-color: $bodyColor;
+  color: $textGray;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+fieldset {
+  margin: 0;
+}
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  display: block;
+  cursor: pointer;
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
