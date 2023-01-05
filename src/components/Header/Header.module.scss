@@ -6,13 +6,20 @@
   border-bottom: 2px solid;
 }
 .imgWrapper {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 5px;
   overflow: hidden;
+  @media (min-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 .title {
-  font-size: 36px;
+  font-size: 20px;
   text-align: center;
+  @media (min-width: 768px) {
+    font-size: 36px;
+  }
 }
