@@ -67,7 +67,7 @@ export const Chart = () => {
       legend: {
         position: 'bottom',
         labels: {
-          boxWidth: 18,
+          boxWidth: 16,
           font: {
             size: 12,
             family: 'Comfortaa',
