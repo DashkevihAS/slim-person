@@ -1,4 +1,5 @@
 import { Line } from 'react-chartjs-2';
+import { fetchPersons } from '../../redux/slices/usersSlice';
 import style from './Chart.module.scss';
 
 import {
@@ -11,7 +12,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 ChartJS.register(
   CategoryScale,
@@ -24,17 +26,25 @@ ChartJS.register(
 );
 
 export const Chart = () => {
-  const antonWeight = useSelector((state) => state.users.users.anton);
-  const alenaWeight = useSelector((state) => state.users.users.alena);
-  const kateWeight = useSelector((state) => state.users.users.kate);
-  const dimaWeight = useSelector((state) => state.users.users.dima);
+  const dispatch = useDispatch();
+
+  const persons = useSelector((state) => state.users.persons);
+  const status = useSelector((state) => state.users.status);
+
+  const antonWeight = persons.length ? persons[0].data : [];
+  const alenaWeight = persons.length ? persons[1].data : [];
+  const kateWeight = persons.length ? persons[2].data : [];
+  const dimaWeight = persons.length ? persons[3].data : [];
+
+  useEffect(() => {
+    dispatch(fetchPersons());
+  }, []);
 
   const data = {
-    // labels: [...days, ''],
     datasets: [
       {
         label: 'Антон',
-        data: antonWeight,
+        data: [...antonWeight, { y: null, x: '' }],
         fill: false,
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
@@ -82,7 +92,7 @@ export const Chart = () => {
         padding: '10',
       },
       tooltip: {
-        mode: 'index',
+        mode: 'x',
         intersect: false,
         caretSize: 6,
       },
@@ -90,7 +100,13 @@ export const Chart = () => {
   };
   return (
     <section className={style.chartSection}>
-      <Line className={style.chart} options={options} data={data} />
+      {status === 'loading' && <h3>Данные загружаются... </h3>}
+
+      {status === 'loaded' && (
+        <Line className={style.chart} options={options} data={data} />
+      )}
+      {status === 'error' && <h3>Что-то пошло не так :-(</h3>}
+      {status === 'error' && <h3>Дурите голову Антону)</h3>}
     </section>
   );
 };

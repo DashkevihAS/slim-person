@@ -1,46 +1,51 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from '../../axios';
+
+export const fetchPersons = createAsyncThunk(
+  'persons/fetchPersons',
+  async () => {
+    const { data } = await axios.get('/persons');
+
+    return data;
+  },
+);
+export const fetchPersonData = createAsyncThunk(
+  'persons/fetchPersonData',
+  async (params) => {
+    const { data } = await axios.patch('/persons', params);
+    return data;
+  },
+);
 
 const initialState = {
-  users: {
-    anton: [
-      { y: 95.3, x: '03.01' },
-      { y: 95.1, x: '04.01' },
-      { y: 94.6, x: '05.01' },
-    ],
-    alena: [
-      { y: 58.3, x: '03.01' },
-      { y: 58.1, x: '04.01' },
-      { y: 58, x: '05.01' },
-    ],
-    kate: [
-      { y: 62.05, x: '03.01' },
-      { y: 61.8, x: '04.01' },
-    ],
-    dima: [
-      { y: 79, x: '03.01' },
-      { y: 77.15, x: '04.01' },
-    ],
-  },
+  persons: [],
+  status: 'loading',
 };
 
 const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {
-    addPersonWeight: (state, action) => {
-      const person = action.payload.person;
-      const day = action.payload.day;
-      const weight = Number(action.payload.weight);
+  reducers: {},
+  extraReducers: {
+    // получить данные всех пользователей
+    [fetchPersons.pending]: (state) => {
+      state.status = 'loading';
+    },
+    [fetchPersons.fulfilled]: (state, action) => {
+      state.persons = action.payload;
+      state.status = 'loaded';
+    },
+    [fetchPersons.rejected]: (state) => {
+      state.status = 'error';
+    },
 
-      if (!state.users[person].find((obj) => obj.x === day)) {
-        state.users[person].push({ y: weight, x: day });
-      } else {
-        alert(`данные за ${day} уже внесены`);
-      }
+    // отправить данные пользователя и получить обновленные
+    [fetchPersonData.fulfilled]: (state, action) => {
+      const name = action.payload.name;
+      state.persons.find((person) => person.name === name).data =
+        action.payload.data;
     },
   },
 });
-
-export const { addPersonWeight } = usersSlice.actions;
 
 export default usersSlice.reducer;

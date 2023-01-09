@@ -1,48 +1,53 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addPersonWeight } from '../../redux/slices/usersSlice';
-import style from './DataInput.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPersonData } from '../../redux/slices/usersSlice';
 
-const monthes = [
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08',
-  '09',
-  '10',
-  '11',
-  '12',
-];
+import { monthes } from '../../assets/const';
+
+import style from './DataInput.module.scss';
 
 export const DataInput = () => {
   const dispatch = useDispatch();
+  const persons = useSelector((state) => state.users.persons);
 
   const [person, setPerson] = useState('');
   const [weight, setWeight] = useState('');
-  // const [dateInput, setDateInput] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
 
-  // const month = dateInput.split('-')[1];
-  // const day = dateInput.split('-')[2];
   const date = new Date();
   const today = +date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
   const month = date.getMonth();
 
+  const clearForm = () => {
+    setPerson('');
+    setWeight('');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const day = today + '.' + monthes[month];
+
+    const personData = persons.find((obj) => obj.name === person).data;
+    const isExist = personData.find((obj) => obj.x === 'day');
+    if (isExist) {
+      alert('Данные за тот день уже введены');
+      clearForm();
+      return;
+    }
+
     dispatch(
-      addPersonWeight({
+      fetchPersonData({
         person,
         weight,
-        day: today + '.' + monthes[month],
+        day,
       }),
     );
-    setPerson('');
-    setWeight('');
+    clearForm();
+    setShowMessage(true);
+    setTimeout(() => {
+      setShowMessage(false);
+    }, 2000);
   };
   return (
     <form className={style.form} onSubmit={handleSubmit}>
@@ -64,26 +69,13 @@ export const DataInput = () => {
         </select>
       </label>
 
-      {/* <label className={style.label} htmlFor='date' min='06.01.2023'>
-        <span>дата</span>
-        <input
-          className={style.input}
-          value={dateInput}
-          onChange={(e) => setDateInput(e.target.value)}
-          type='date'
-          id='date'
-          name='date'
-          required
-        />
-      </label> */}
-
       <label className={style.label} htmlFor='weight'>
         <span>вес, кг</span>
         <input
           className={style.input}
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
-          type='text'
+          type='number'
           id='weight'
           name='weight'
           required
@@ -92,6 +84,9 @@ export const DataInput = () => {
       <button className={style.btnSubmit} type='submit'>
         Добавить данные
       </button>
+      {showMessage ? (
+        <p className={style.message}>Данные успешно отправлены!</p>
+      ) : null}
     </form>
   );
 };
