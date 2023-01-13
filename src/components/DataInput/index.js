@@ -10,6 +10,8 @@ export const DataInput = () => {
   const dispatch = useDispatch();
   const persons = useSelector((state) => state.users.persons);
 
+  const status = useSelector((state) => state.users.status);
+
   const [person, setPerson] = useState('');
   const [weight, setWeight] = useState('');
   const [showMessage, setShowMessage] = useState(false);
@@ -81,7 +83,11 @@ export const DataInput = () => {
           required
         />
       </label>
-      <button className={style.btnSubmit} type='submit'>
+      <button
+        className={style.btnSubmit}
+        type='submit'
+        disabled={status === 'loading'}
+      >
         Добавить данные
       </button>
       {showMessage ? (
